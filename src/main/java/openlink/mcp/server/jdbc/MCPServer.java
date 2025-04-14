@@ -271,7 +271,7 @@ public class MCPServer {
     
 
     @Tool(description = "Retrieve and return a list containing information about tables whose names contain the substring 'q' .")
-    String podbc_filter_table_names(McpLog log,
+    String jdbc_filter_table_names(McpLog log,
     	@ToolArg(description = "substring got search", required = true) String q,
     	@ToolArg(description = "Schema name", required = false) Optional<String> schema,
     	@ToolArg(description = "Username", required = false) String user,
