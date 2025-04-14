@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    id 'io.quarkus' version '3.20.0'
+}
+
+group = 'openlink.mcp.server.jdbc'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation enforcedPlatform("io.quarkus.platform:quarkus-bom:3.20.0")
+    implementation 'io.quarkus:quarkus-rest-client-jackson'
+    implementation 'io.quarkus:quarkus-qute'
+    implementation 'io.quarkiverse.mcp:quarkus-mcp-server-stdio:1.0.0.Beta4'
+
+    implementation 'com.openlinksw:virtjdbc4_3:3.123'
+
+    testImplementation 'io.quarkus:quarkus-junit5'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
+    systemProperty 'maven.home', System.getenv('MAVEN_HOME') ?: ''
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    description = 'Runs integration tests'
+    group = 'verification'
+    shouldRunAfter test
+    systemProperty 'java.util.logging.manager', 'org.jboss.logmanager.LogManager'
+    systemProperty 'maven.home', System.getenv('MAVEN_HOME') ?: ''
+    systemProperty 'native.image.path', "${buildDir}/MCPServer-runner"
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+}
+
+configurations.all {
+    resolutionStrategy.failOnVersionConflict()
+}
+
+task copyLibs {
+   doLast{  
+      println('------COPY JARS----------')
+      copy {
+        from './build'
+        include '*.jar'
+        into projectDir
+      }
+   }
+}
+
+
+// Ensure copyLibs runs after quarkusBuild
+tasks.named('quarkusBuild') {
+    finalizedBy(copyLibs)
+}
+
+copyLibs.dependsOn(quarkusBuild)
+
