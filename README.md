@@ -56,7 +56,7 @@ Add the following to `claude_desktop_config.json`:
   "mcpServers": {
     "my_database": {
       "command": "java",
-      "args": ["-jar", "/path/to/mcp-jdbc-server/mcp-jdbc-srv/target/MCPServer-1.0.0-runner.jar"],
+      "args": ["-jar", "/path/to/mcp-jdbc-server/MCPServer-1.0.0-runner.jar"],
       "env": {
         "jdbc.url": "jdbc:virtuoso://localhost:1111",
         "jdbc.user": "username",
