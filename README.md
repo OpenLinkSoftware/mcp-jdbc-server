@@ -43,7 +43,7 @@ Update your `.env`by overriding the defaults to match your preferences
 jdbc.url=jdbc:virtuoso://localhost:1111
 jdbc.user=dba
 jdbc.password=dba
-API_KEY=xxx
+jdbc.api_key=xxx
 ```
 ---
 
@@ -61,7 +61,7 @@ Add the following to `claude_desktop_config.json`:
         "jdbc.url": "jdbc:virtuoso://localhost:1111",
         "jdbc.user": "username",
         "jdbc.password": "password",
-        "API_KEY": "sk-xxx"
+        "jdbc.api_key": "sk-xxx"
       }
     }
   }
