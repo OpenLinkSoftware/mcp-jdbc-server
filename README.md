@@ -76,20 +76,20 @@ After successful installation, the following tools will be available to MCP clie
 ### Overview
 |name|description|
 |---|---|
-|pjdbc_get_schemas|List database schemas accessible to connected database management system (DBMS).|
-|pjdbc_get_tables|List tables associated with a selected database schema.|
-|pjdbc_describe_table|Provide the description of a table associated with a designated database schema. This includes information about column names, data types, nulls handling, autoincrement, primary key, and foreign keys|
-|pjdbc_filter_table_names|List tables, based on a substring pattern from the `q` input field, associated with a selected database schema.|
-|pjdbc_query_database|Execute a SQL query and return results in JSONL format.|
-|pjdbc_execute_query|Execute a SQL query and return results in JSONL format.|
-|pjdbc_execute_query_md|Execute a SQL query and return results in Markdown table format.|
-|pjdbc_spasql_query|Execute a SPASQL query and return results.|
-|pjdbc_sparql_query|Execute a SPARQL query and return results.|
-|pjdbc_virtuoso_support_ai|Interact with the Virtuoso Support Assistant/Agent -- a Virtuoso-specific feature for interacting with LLMs|
+|jdbc_get_schemas|List database schemas accessible to connected database management system (DBMS).|
+|jdbc_get_tables|List tables associated with a selected database schema.|
+|jdbc_describe_table|Provide the description of a table associated with a designated database schema. This includes information about column names, data types, nulls handling, autoincrement, primary key, and foreign keys|
+|jdbc_filter_table_names|List tables, based on a substring pattern from the `q` input field, associated with a selected database schema.|
+|jdbc_query_database|Execute a SQL query and return results in JSONL format.|
+|jdbc_execute_query|Execute a SQL query and return results in JSONL format.|
+|jdbc_execute_query_md|Execute a SQL query and return results in Markdown table format.|
+|jdbc_spasql_query|Execute a SPASQL query and return results.|
+|jdbc_sparql_query|Execute a SPARQL query and return results.|
+|jdbc_virtuoso_support_ai|Interact with the Virtuoso Support Assistant/Agent -- a Virtuoso-specific feature for interacting with LLMs|
 
 ### Detailed Description
 
-- **pjdbc_get_schemas**
+- **jdbc_get_schemas**
   - Retrieve and return a list of all schema names from the connected database.
   - Input parameters:
     - `user` (string, optional): Database username. Defaults to "demo".
@@ -97,7 +97,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns a JSON string array of schema names.
 
-- **pjdbc_get_tables**
+- **jdbc_get_tables**
   - Retrieve and return a list containing information about tables in a specified schema. If no schema is provided, uses the connection's default schema.
   - Input parameters:
     - `schema` (string, optional): Database schema to filter tables. Defaults to connection default.
@@ -106,7 +106,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns a JSON string containing table information (e.g., TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE).
 
-- **pjdbc_filter_table_names**
+- **jdbc_filter_table_names**
   - Filters and returns information about tables whose names contain a specific substring.
   - Input parameters:
     - `q` (string, required): The substring to search for within table names.
@@ -116,7 +116,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns a JSON string containing information for matching tables.
 
-- **pjdbc_describe_table**
+- **jdbc_describe_table**
   - Retrieve and return detailed information about the columns of a specific table.
   - Input parameters:
     - `schema` (string, required): The database schema name containing the table.
@@ -126,7 +126,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns a JSON string describing the table's columns (e.g., COLUMN_NAME, TYPE_NAME, COLUMN_SIZE, IS_NULLABLE).
 
-- **pjdbc_query_database**
+- **jdbc_query_database**
   - Execute a standard SQL query and return the results in JSON format.
   - Input parameters:
     - `query` (string, required): The SQL query string to execute.
@@ -135,7 +135,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns query results as a JSON string.
 
-- **pjdbc_query_database_md**
+- **jdbc_query_database_md**
   - Execute a standard SQL query and return the results formatted as a Markdown table.
   - Input parameters:
     - `query` (string, required): The SQL query string to execute.
@@ -144,7 +144,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns query results as a Markdown table string.
 
-- **pjdbc_query_database_jsonl**
+- **jdbc_query_database_jsonl**
   - Execute a standard SQL query and return the results in JSON Lines (JSONL) format (one JSON object per line).
   - Input parameters:
     - `query` (string, required): The SQL query string to execute.
@@ -153,7 +153,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns query results as a JSONL string.
 
-- **pjdbc_spasql_query**
+- **jdbc_spasql_query**
   - Execute a SPASQL (SQL/SPARQL hybrid) query return results. This is a Virtuoso-specific feature.
   - Input parameters:
     - `query` (string, required): The SPASQL query string.
@@ -164,7 +164,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns the result from the underlying stored procedure call (e.g., `Demo.demo.execute_spasql_query`).
 
-- **pjdbc_sparql_query**
+- **jdbc_sparql_query**
   - Execute a SPARQL query and return results. This is a Virtuoso-specific feature.
   - Input parameters:
     - `query` (string, required): The SPARQL query string.
@@ -175,7 +175,7 @@ After successful installation, the following tools will be available to MCP clie
     - `url` (string, optional): JDBC URL connection string.
   - Returns the result from the underlying function call (e.g., `"UB".dba."sparqlQuery"`).
 
-- **pjdbc_virtuoso_support_ai**
+- **jdbc_virtuoso_support_ai**
   - Utilizes a Virtuoso-specific AI Assistant function, passing a prompt and optional API key. This is a Virtuoso-specific feature.
   - Input parameters:
     - `prompt` (string, required): The prompt text for the AI function.

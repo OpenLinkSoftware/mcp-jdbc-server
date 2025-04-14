@@ -67,7 +67,7 @@ public class MCPServer {
 
 
     @Tool(description = "Retrieve and return a list of all schema names from the connected database.")
-    String pjdbc_get_schemas(McpLog log,
+    String jdbc_get_schemas(McpLog log,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
@@ -90,7 +90,7 @@ public class MCPServer {
 
 
     @Tool(description = "Retrieve and return a list containing information about tables in specified schema, if empty uses connection default")
-    String pjdbc_get_tables(McpLog log,
+    String jdbc_get_tables(McpLog log,
     	@ToolArg(description = "Schema name", required = false) Optional<String> schema,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
@@ -119,7 +119,7 @@ public class MCPServer {
 
 
     @Tool(description = "Retrieve and return a list containing information about tables in specified schema, if empty uses connection default")
-    String pjdbc_describe_table(McpLog log,
+    String jdbc_describe_table(McpLog log,
     	@ToolArg(description = "Schema name", required = false) Optional<String> schema,
     	@ToolArg(description = "Table name", required = true) String table,
     	@ToolArg(description = "Username", required = false) String user,
@@ -306,7 +306,7 @@ public class MCPServer {
 
 
     @Tool(description = "Execute a SQL query and return results in JSONL format.")
-    String pjdbc_execute_query(McpLog log,
+    String jdbc_execute_query(McpLog log,
     	@ToolArg(description = "Query", required = true) String query,
     	@ToolArg(description = "Max Rows", required = false) Optional<Integer> max_rows,
     	@ToolArg(description = "Username", required = false) String user,
@@ -357,7 +357,7 @@ public class MCPServer {
 
 
     @Tool(description = "Execute a SQL query and return results in Markdown table format.")
-    String pjdbc_execute_query_md(McpLog log,
+    String jdbc_execute_query_md(McpLog log,
     	@ToolArg(description = "Query", required = true) String query,
     	@ToolArg(description = "Max Rows", required = false) Optional<Integer> max_rows,
     	@ToolArg(description = "Username", required = false) String user,
@@ -416,7 +416,7 @@ public class MCPServer {
 
 
     @Tool(description = "Execute a SQL query and return results in JSONL format.")
-    String pjdbc_query_database(McpLog log,
+    String jdbc_query_database(McpLog log,
     	@ToolArg(description = "Query", required = true) String query,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
@@ -462,7 +462,7 @@ public class MCPServer {
 
 
     @Tool(description = "Execute a SPASQL query and return results.")
-    String pjdbc_spasql_query(McpLog log,
+    String jdbc_spasql_query(McpLog log,
     	@ToolArg(description = "Query", required = true) String query,
     	@ToolArg(description = "Max Rows", required = false) Optional<Integer> max_rows,
     	@ToolArg(description = "Timeout", required = false) Optional<Integer> timeout,
@@ -492,7 +492,7 @@ public class MCPServer {
 
 
     @Tool(description = "Execute a SPARQL query and return results.")
-    String pjdbc_sparql_query(McpLog log,
+    String jdbc_sparql_query(McpLog log,
     	@ToolArg(description = "Query", required = true) String query,
     	@ToolArg(description = "Max Rows", required = false) Optional<String> format,
     	@ToolArg(description = "Timeout", required = false) Optional<Integer> timeout,
@@ -524,7 +524,7 @@ public class MCPServer {
 
 
     @Tool(description = "Interact with Virtuoso Support AI Agent")
-    String pjdbc_virtuoso_support_ai(McpLog log,
+    String jdbc_virtuoso_support_ai(McpLog log,
     	@ToolArg(description = "Prompt", required = true) String prompt,
     	@ToolArg(description = "API Key", required = false) Optional<String> api_key,
     	@ToolArg(description = "Username", required = false) String user,
@@ -552,7 +552,7 @@ public class MCPServer {
 
 
     @Tool(description = "Use the SPARQL AI Agent function")
-    String pjdbc_sparql_func(McpLog log,
+    String jdbc_sparql_func(McpLog log,
     	@ToolArg(description = "Prompt", required = true) String prompt,
     	@ToolArg(description = "API Key", required = false) Optional<String> api_key,
     	@ToolArg(description = "Username", required = false) String user,
@@ -582,7 +582,7 @@ public class MCPServer {
     @Tool(description="This query retrieves all entity types in the RDF graph, along with their labels and comments if available. "
                 +"It filters out blank nodes and ensures that only IRI types are returned. "
                 +"The LIMIT clause is set to 100 to restrict the number of entity types returned. ")
-    String pjdbc_sparql_get_entity_types(McpLog log,
+    String jdbc_sparql_get_entity_types(McpLog log,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
@@ -617,14 +617,14 @@ public class MCPServer {
       LIMIT 100
     ) AS x 
     """;
-        return pjdbc_query_database(log, query, user, password, url);
+        return jdbc_query_database(log, query, user, password, url);
     }
 
 
     @Tool(description="This query retrieves all entity types in the RDF graph, along with their labels and comments if available. "
                 +"It filters out blank nodes and ensures that only IRI types are returned. "
                 +"The LIMIT clause is set to 100 to restrict the number of entity types returned.")
-    String pjdbc_sparql_get_entity_types_detailed(McpLog log,
+    String jdbc_sparql_get_entity_types_detailed(McpLog log,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
@@ -653,14 +653,14 @@ public class MCPServer {
         LIMIT 20
     ) AS results 
     """;
-        return pjdbc_query_database(log, query, user, password, url);
+        return jdbc_query_database(log, query, user, password, url);
     }
 
 
     @Tool(description="This query retrieves samples of entities for each type in the RDF graph, along with their labels and counts. "
                 +"It groups by entity type and orders the results by sample count in descending order. "
                 +"Note: The LIMIT clause is set to 20 to restrict the number of entity types returned.")
-    String pjdbc_sparql_get_entity_types_samples(McpLog log,
+    String jdbc_sparql_get_entity_types_samples(McpLog log,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
@@ -689,12 +689,12 @@ public class MCPServer {
         LIMIT 20
     ) AS results
     """;
-        return pjdbc_query_database(log, query, user, password, url);
+        return jdbc_query_database(log, query, user, password, url);
     }
 
 
     @Tool(description="This query retrieves all ontologies in the RDF graph, along with their labels and comments if available.")
-    String pjdbc_sparql_get_ontologies(McpLog log,
+    String jdbc_sparql_get_ontologies(McpLog log,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
@@ -729,7 +729,7 @@ public class MCPServer {
         LIMIT 100
     ) AS x
     """;
-        return pjdbc_query_database(log, query, user, password, url);
+        return jdbc_query_database(log, query, user, password, url);
     }
 
 
