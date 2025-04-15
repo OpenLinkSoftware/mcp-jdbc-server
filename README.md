@@ -3,7 +3,7 @@
 
 A lightweight MCP (Model Context Protocol) server for JDBC built with **Quakrus** . This server is compatible with Virtuoso DBMS and other DBMS backends that has JDBC driver.
 
-![mcp-client-and-servers|648x499](https://www.openlinksw.com/data/gifs/mcp-client-and-servers.gif)
+![mcp-client-and-servers|648x499](https://www.openlinksw.com/data/gifs/mcp-client-and-servers-opal-tools-with-jdbc.gif)
 
 ---
 
