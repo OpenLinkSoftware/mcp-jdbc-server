@@ -189,7 +189,7 @@ After successful installation, the following tools will be available to MCP clie
 
 ## Troubleshooting
 
-For easier troubleshooting:
+For easy troubleshooting:
 1. Install the MCP Inspector:
    ```bash
    npm install -g @modelcontextprotocol/inspector
