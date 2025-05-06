@@ -237,13 +237,13 @@ Assuming the following JDBC Driver information.
 1. Install the Oracle (`ojdbc17.jar`) or Informix (`jdbc-15.0.0.1.1.jar`) JDBC Drivers, and ensure their JAR files are registered with the host operating system's Java Virtual Machine (JVM) via $CLASSPATH
 
    ```bash
-    export CLASSPATH=$CLASSPATH:/Library/Java/Extensions/virtjdbc4.jar:/Library/Java/Extensions/ojdbc17.jar:/Library/Java/Extensions/jdbc-15.0.0.1.1.jar
+    export CLASSPATH=$CLASSPATH:/Library/Java/Extensions/ojdbc17.jar:/Library/Java/Extensions/jdbc-15.0.0.1.1.jar
    ```
 
 2. Start the inspector using the following command-line arguments:
 
    ```bash
-   npx @modelcontextprotocol/inspector java -cp MCPServer-1.0.0-runner.jar:/Libary/Java/Extensions/opljdbc4_2.jar:/Library/Java/Extensions/virtjdbc4.jar:/Library/Java/Extensions/ojdbc17.jar:/Library/Java/Extensions/jdbc-15.0.0.1.1.jar io.quarkus.runner.GeneratedMain
+   npx @modelcontextprotocol/inspector java -cp MCPServer-1.0.0-runner.jar:/Library/Java/Extensions/ojdbc17.jar:/Library/Java/Extensions/jdbc-15.0.0.1.1.jar io.quarkus.runner.GeneratedMain
    ```
 3. Access the URL returned by the inspector and then use the `jdbc_execute_query` operation to query the target database, by providing actual values for the following input field templates
    - JDBC URL 
