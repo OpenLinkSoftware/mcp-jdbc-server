@@ -187,9 +187,10 @@ After successful installation, the following tools will be available to MCP clie
 
 ---
 
-## Troubleshooting
+## Basic Usage & Troubleshooting
 
-For easy troubleshooting:
+### MCP Inspector Connecting to Virtuoso's ODBC Driver
+For basic MCP client use and troubleshooting, use the MCP Inspector as follows:
 1. Install the MCP Inspector:
    ```bash
    npm install -g @modelcontextprotocol/inspector
@@ -200,4 +201,53 @@ For easy troubleshooting:
    npx @modelcontextprotocol/inspector java -jar /path/to/mcp-jdbc-server/MCPServer-1.0.0-runner.jar
    ```
 
-Access the provided URL to troubleshoot server interactions.
+Access the URL returned by the inspector to troubleshoot MCP server interactions.
+
+### MCP Inspector Connecting to additional Drivers
+
+For basic MCP client use and troubleshooting, use the MCP Inspector as follows:
+
+1. Install the JDBC Driver(s), ensuring their JAR files are registered with the host operating system's Java Virtual Machine (JVM) via $CLASSPATH
+
+    ```bash
+    export CLASSPATH=$CLASSPATH:/path/to/driver1.jar:/path/to/driver2.jar:/path/to/driverN.jar
+    ```
+
+2. Start the inspector using the following command-line arguments:
+
+   ```bash
+   npx @modelcontextprotocol/inspector java -cp MCPServer-1.0.0-runner.jar:/path/to/driver1.jar:/path/to/driver2.jar:/path/to/driverN.jar io.quarkus.runner.GeneratedMain
+
+   ```
+
+#### Usage Example based on Oracle and Informix Drivers
+
+Assuming the following JDBC Driver information.
+
+- Oracle JDBC Driver URL Template: 
+  ```bash
+  jdbc:oracle:thin:@<hostname>:[port]:<SERVICEID>
+  ```
+
+- Informix JDBC Driver URL Template: 
+  ```bash
+  jdbc:informix-sqli://<hostname>:<port>/<database></database>:<INFORMIXSERVER>=<SERVICEID>
+  ```
+
+1. Install the Oracle (`ojdbc17.jar`) or Informix (`jdbc-15.0.0.1.1.jar`) JDBC Drivers, and ensure their JAR files are registered with the host operating system's Java Virtual Machine (JVM) via $CLASSPATH
+
+   ```bash
+    export CLASSPATH=$CLASSPATH:/Library/Java/Extensions/virtjdbc4.jar:/Library/Java/Extensions/ojdbc17.jar:/Library/Java/Extensions/jdbc-15.0.0.1.1.jar
+   ```
+
+2. Start the inspector using the following command-line arguments:
+
+   ```bash
+   npx @modelcontextprotocol/inspector java -cp MCPServer-1.0.0-runner.jar:/Libary/Java/Extensions/opljdbc4_2.jar:/Library/Java/Extensions/virtjdbc4.jar:/Library/Java/Extensions/ojdbc17.jar:/Library/Java/Extensions/jdbc-15.0.0.1.1.jar io.quarkus.runner.GeneratedMain
+   ```
+3. Access the URL returned by the inspector and then use the `jdbc_execute_query` operation to query the target database, by providing actual values for the following input field templates
+   - JDBC URL 
+   - User
+   - Password
+   - Query 
+
