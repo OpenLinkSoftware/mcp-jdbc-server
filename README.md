@@ -80,16 +80,16 @@ After successful installation, the following tools will be available to MCP clie
 
 | name                     | description |
 |:---                      |:---|
-|`jdbc_get_schemas`        |List database schemas accessible to connected database management system (DBMS).|
-|`jdbc_get_tables`         |List tables associated with a selected database schema.|
-|`jdbc_describe_table`     |Provide the description of a table associated with a designated database schema. This includes information about column names, data types, nulls handling, autoincrement, primary key, and foreign keys.|
-|`jdbc_filter_table_names` |List tables, based on a substring pattern from the `q` input field, associated with a selected database schema.|
-|`jdbc_query_database`     |Execute a SQL query and return results in JSONL format.|
-|`jdbc_execute_query`      |Execute a SQL query and return results in JSONL format.|
-|`jdbc_execute_query_md`   |Execute a SQL query and return results in Markdown table format.|
-|`jdbc_spasql_query`       |Execute a SPASQL query and return results.|
-|`jdbc_sparql_query`       |Execute a SPARQL query and return results.|
-|`jdbc_virtuoso_support_ai`|Interact with the Virtuoso Support Assistant/Agent — a Virtuoso-specific feature for interacting with LLMs|
+|`jdbc_get_schemas`        | List database schemas accessible to connected database management system (DBMS). |
+|`jdbc_get_tables`         | List tables associated with a selected database schema. |
+|`jdbc_describe_table`     | Provide the description of a table associated with a designated database schema. This includes information about column names, data types, nulls handling, autoincrement, primary key, and foreign keys. |
+|`jdbc_filter_table_names` | List tables, based on a substring pattern from the `q` input field, associated with a selected database schema. |
+|`jdbc_query_database`     | Execute a SQL query and return results in JSONL format. |
+|`jdbc_execute_query`      | Execute a SQL query and return results in JSONL format. |
+|`jdbc_execute_query_md`   | Execute a SQL query and return results in Markdown table format. |
+|`jdbc_spasql_query`       | _A Virtuoso-specific feature!_ Execute a SPASQL query and return results. |
+|`jdbc_sparql_query`       | _A Virtuoso-specific feature!_ Execute a SPARQL query and return results. |
+|`jdbc_virtuoso_support_ai`| _A Virtuoso-specific feature!_ Interact with LLMs through the Virtuoso Support Assistant/Agent. |
 
 #### Detailed Description
 
@@ -232,19 +232,19 @@ For basic MCP client use and troubleshooting, use the MCP Inspector as follows:
 
 #### Use Example based on Oracle and Informix Drivers
 
-Assuming the following JDBC Driver information:
+0. Assuming the following JDBC Driver information:
 
-- **Oracle JDBC Driver URL Template**
+   - **Oracle JDBC Driver URL Template**
 
-  ```bash
-  jdbc:oracle:thin:@<hostname>:[port]:<SERVICEID>
-  ```
+     ```bash
+     jdbc:oracle:thin:@<hostname>:[port]:<SERVICEID>
+     ```
 
-- **Informix JDBC Driver URL Template**
+   - **Informix JDBC Driver URL Template**
 
-  ```bash
-  jdbc:informix-sqli://<hostname>:<port>/<database></database>:<INFORMIXSERVER>=<SERVICEID>
-  ```
+     ```bash
+     jdbc:informix-sqli://<hostname>:<port>/<database></database>:<INFORMIXSERVER>=<SERVICEID>
+     ```
 
 1. Install the Oracle (`ojdbc17.jar`) and/or Informix (`jdbc-15.0.0.1.1.jar`) JDBC Drivers, and ensure their JAR files are registered with the host operating system's Java Virtual Machine (JVM) via `$CLASSPATH`. For instance:
 
