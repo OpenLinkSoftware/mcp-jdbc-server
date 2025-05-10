@@ -65,6 +65,17 @@ public class MCPServer {
         return DriverManager.getConnection(url, user, password);
     }
 
+    private boolean supportsCatalogs(DatabaseMetaData meta) throws SQLException
+    {
+        boolean rc = true;
+
+        String catTerm = meta.getCatalogTerm();
+        if (catTerm == null || catTerm.isEmpty()) {
+            rc = meta.supportsCatalogsInTableDefinitions();
+        }
+        return rc;    
+    }
+
 
     @Tool(description = "Retrieve and return a list of all schema names from the connected database.")
     String jdbc_get_schemas(McpLog log,
@@ -76,11 +87,20 @@ public class MCPServer {
         //log.error("Listing tables");
         try (Connection conn = getConnection(user, password, url)) {
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getCatalogs();
-
+            boolean hasCats = supportsCatalogs(metaData);
             List<String> cats = new ArrayList<>();
-            while (rs.next()) {
-                cats.add(rs.getString("TABLE_CAT"));
+
+            if (hasCats) {
+                ResultSet rs = metaData.getCatalogs();
+                while (rs.next()) {
+                    cats.add(rs.getString(1)); //"TABLE_CAT"));
+                }
+            }
+            else {
+                ResultSet rs = metaData.getSchemas();
+                while (rs.next()) {
+                    cats.add(rs.getString(1)); //"TABLE_CAT"));
+                }
             }
             return mapper.writeValueAsString(cats);
         } catch (Exception e) {
@@ -101,14 +121,20 @@ public class MCPServer {
         String cat = schema.orElse("%");
         try (Connection conn = getConnection(user, password, url)) {
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getTables(cat, null, "%", new String[] { "TABLE" });
+            ResultSet rs;
+            boolean hasCats = supportsCatalogs(metaData);
+
+            if (hasCats) 
+                rs = metaData.getTables(cat, null, "%", new String[] { "TABLE" });
+            else
+                rs = metaData.getTables(null, cat,  "%", new String[] { "TABLE" });
 
             List<Map<String, String>> tables = new ArrayList<>();
             while (rs.next()) {
                 Map<String, String> table = new HashMap<>();
-                table.put("TABLE_CAT", rs.getString("TABLE_CAT"));
-                table.put("TABLE_SCHEM", rs.getString("TABLE_SCHEM"));
-                table.put("TABLE_NAME", rs.getString("TABLE_NAME"));
+                table.put("TABLE_CAT", rs.getString(1));    //"TABLE_CAT"
+                table.put("TABLE_SCHEM", rs.getString(2));  //"TABLE_SCHEM"
+                table.put("TABLE_NAME", rs.getString(3));   //"TABLE_NAME"
                 tables.add(table);
             }
             return mapper.writeValueAsString(tables);
@@ -149,9 +175,16 @@ public class MCPServer {
     private Map<String, Object> hasTable(Connection conn, String cat, String table) throws SQLException 
     {
         Map<String, Object> result = new HashMap<>();
+
         DatabaseMetaData metaData = conn.getMetaData();
-        ResultSet rs = metaData.getTables(cat, null, table, null);
-        
+        boolean hasCats = supportsCatalogs(metaData);
+        ResultSet rs = null;
+
+        if (hasCats) 
+            rs = metaData.getTables(cat, null, table, new String[] { "TABLE" });
+        else
+            rs = metaData.getTables(null, cat, table, new String[] { "TABLE" });
+
         if (rs.next()) {
             result.put("exists", true);
             result.put("cat", rs.getString(1));
@@ -172,12 +205,12 @@ public class MCPServer {
         
         while (rs.next()) {
             Map<String, Object> column = new HashMap<>();
-            column.put("name", rs.getString("COLUMN_NAME"));
-            column.put("type", rs.getString("TYPE_NAME"));
-            column.put("column_size", rs.getInt("COLUMN_SIZE"));
-            column.put("num_prec_radix", rs.getInt("NUM_PREC_RADIX"));
-            column.put("nullable", rs.getInt("NULLABLE") != 0);
-            column.put("default", rs.getString("COLUMN_DEF"));
+            column.put("name", rs.getString(4));         //"COLUMN_NAME"));
+            column.put("type", rs.getString(6));         //"TYPE_NAME"));
+            column.put("column_size", rs.getInt(7));     //"COLUMN_SIZE"));
+            column.put("num_prec_radix", rs.getInt(10)); //"NUM_PREC_RADIX"));
+            //column.put("nullable", rs.getInt(11)!=0);
+            column.put("default", rs.getString(13));     //"COLUMN_DEF"));
             columns.add(column);
         }
         
@@ -193,9 +226,9 @@ public class MCPServer {
         String name = null;
         
         while (rs.next()) {
-            columns.add(rs.getString("COLUMN_NAME"));
+            columns.add(rs.getString(4));  //"COLUMN_NAME"));
             if (name == null) {
-                name = rs.getString("PK_NAME");
+                name = rs.getString(6);    //"PK_NAME");
             }
         }
         
@@ -217,16 +250,16 @@ public class MCPServer {
         Map<String, Map<String, Object>> fkeysMap = new HashMap<>();
         
         while (rs.next()) {
-            String fkName = rs.getString("FK_NAME");
+            String fkName = rs.getString(12);  //"FK_NAME");
 
             Map<String, Object> fkey = fkeysMap.get(fkName);
             if (fkey == null) {
                 fkey = new HashMap<>();
                 fkey.put("name", fkName);
                 fkey.put("constrained_columns", new ArrayList<String>());
-                fkey.put("referred_cat", rs.getString("PKTABLE_CAT"));
-                fkey.put("referred_schem", rs.getString("PKTABLE_SCHEM"));
-                fkey.put("referred_table", rs.getString("PKTABLE_NAME"));
+                fkey.put("referred_cat", rs.getString(1));      //"PKTABLE_CAT"));
+                fkey.put("referred_schem", rs.getString(2));    //"PKTABLE_SCHEM"));
+                fkey.put("referred_table", rs.getString(3));    //"PKTABLE_NAME"));
                 fkey.put("referred_columns", new ArrayList<String>());
                 fkey.put("options", new HashMap<>());
                 fkeysMap.put(fkName, fkey);
@@ -234,11 +267,11 @@ public class MCPServer {
                     
             @SuppressWarnings("unchecked")
             List<String> constrainedColumns = (List<String>) fkey.get("constrained_columns");
-            constrainedColumns.add(rs.getString("FKCOLUMN_NAME"));
+            constrainedColumns.add(rs.getString(8));  //"FKCOLUMN_NAME"));
             
             @SuppressWarnings("unchecked")
             List<String> referredColumns = (List<String>) fkey.get("referred_columns");
-            referredColumns.add(rs.getString("PKCOLUMN_NAME"));
+            referredColumns.add(rs.getString(4));     //"PKCOLUMN_NAME"));
         }
         
         return new ArrayList<>(fkeysMap.values());
@@ -285,16 +318,22 @@ public class MCPServer {
 
         try (Connection conn = getConnection(user, password, url)) {
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getTables(cat, null, "%", new String[] { "TABLE" });
+            boolean hasCats = supportsCatalogs(metaData);
+            ResultSet rs;
+
+            if (hasCats) 
+                rs = metaData.getTables(cat, null, "%", new String[] { "TABLE" });
+            else
+                rs = metaData.getTables(null, cat,  "%", new String[] { "TABLE" });
 
             List<Map<String, String>> tables = new ArrayList<>();
             while (rs.next()) {
                 String tbl = rs.getString("TABLE_NAME");
                 if (tbl.contains(q)) {
                     Map<String, String> table = new HashMap<>();
-                    table.put("TABLE_CAT", rs.getString("TABLE_CAT"));
-                    table.put("TABLE_SCHEM", rs.getString("TABLE_SCHEM"));
-                    table.put("TABLE_NAME", rs.getString("TABLE_NAME"));
+                    table.put("TABLE_CAT", rs.getString(1));            //"TABLE_CAT"));
+                    table.put("TABLE_SCHEM", rs.getString(2));          //"TABLE_SCHEM"));
+                    table.put("TABLE_NAME", rs.getString(3));           //"TABLE_NAME"));
                     tables.add(table);
                 }
             }
