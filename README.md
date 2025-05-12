@@ -68,6 +68,24 @@ Add the following to `claude_desktop_config.json`:
   }
 }
 ```
+
+For **Claude Desktop** users using other JDBC Drivers or a combination of drivers:
+Add the following to `claude_desktop_config.json`:
+```json
+    "jdbc": {
+      "command": "java",
+      "args": [
+        "-cp",
+        "/path/to/mcp-jdbc-server/MCPServer-1.0.0-runner.jar:/path/to/jdbc_driver1.jar:/path/to/jdbc_driverN.jar",
+        "io.quarkus.runner.GeneratedMain"
+      ],
+      "env": {
+        "jdbc.url": "jdbc:virtuoso://localhost:1111",
+        "jdbc.user": "dba",
+        "jdbc.password": "dba"
+      }
+    }
+```
 ---
 
 ## Use
