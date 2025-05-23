@@ -67,13 +67,15 @@ public class MCPServer {
 
     private boolean supportsCatalogs(DatabaseMetaData meta) throws SQLException
     {
-        boolean rc = true;
-
-        String catTerm = meta.getCatalogTerm();
-        if (catTerm == null || catTerm.isEmpty()) {
-            rc = meta.supportsCatalogsInTableDefinitions();
+        try (ResultSet rs = meta.getCatalogs()) {
+            if (rs.next()) {
+                String cat = rs.getString(1);
+                return (cat != null && !cat.isEmpty());
+            }
+        } catch (SQLException e) {
+            return false;
         }
-        return rc;    
+        return false;    
     }
 
 
@@ -526,38 +528,6 @@ public class MCPServer {
             return rs.getString(1);
         } catch (Exception e) {
             throw new ToolCallException("Failed to spasql_query: " + e.getMessage(), e);
-        }
-    }
-
-
-    @Tool(description = "Execute a SPARQL query and return results.")
-    String jdbc_sparql_query(McpLog log,
-    	@ToolArg(description = "Query", required = true) String query,
-    	@ToolArg(description = "Max Rows", required = false) Optional<String> format,
-    	@ToolArg(description = "Timeout", required = false) Optional<Integer> timeout,
-    	@ToolArg(description = "Username", required = false) String user,
-    	@ToolArg(description = "Password", required = false) String password,
-    	@ToolArg(description = "JDBC URL", required = false) String url) 
-    {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
-        String formatValue = format.orElse("json");
-        int timeoutValue = timeout.orElse(300000);
-
-        try (Connection conn = getConnection(user, password, url)) {
-            //"select \"UB\".dba.\"sparqlQuery\"('{escape_sql(query)}', ?, ?) as result"
-            String cmd = "select \"UB\".dba.\"sparqlQuery\"(?, ?, ?) as result";
-
-            PreparedStatement stmt = conn.prepareStatement(cmd);
-            stmt.setString(1, query);
-            stmt.setString(2, formatValue);
-            stmt.setInt(3, timeoutValue);
-
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            return rs.getString(1);
-        } catch (Exception e) {
-            throw new ToolCallException("Failed to sparql_query: " + e.getMessage(), e);
         }
     }
 
