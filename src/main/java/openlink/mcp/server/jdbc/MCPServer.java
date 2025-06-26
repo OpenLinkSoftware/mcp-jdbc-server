@@ -85,8 +85,7 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
+        //log.error("Listing schemas");
         try (Connection conn = getConnection(user, password, url)) {
             DatabaseMetaData metaData = conn.getMetaData();
             boolean hasCats = supportsCatalogs(metaData);
@@ -119,7 +118,6 @@ public class MCPServer {
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
         //log.debug("Listing tables");
-        //log.error("Listing tables");
         String cat = schema.orElse("%");
         try (Connection conn = getConnection(user, password, url)) {
             DatabaseMetaData metaData = conn.getMetaData();
@@ -155,7 +153,6 @@ public class MCPServer {
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
         //log.debug("Listing tables");
-        //log.error("Listing tables");
         String cat = schema.orElse("%");
         Map<String, Object> tableDefinition = new HashMap<>();
 
@@ -177,7 +174,6 @@ public class MCPServer {
     private Map<String, Object> hasTable(Connection conn, String cat, String table) throws SQLException 
     {
         Map<String, Object> result = new HashMap<>();
-
         DatabaseMetaData metaData = conn.getMetaData();
         boolean hasCats = supportsCatalogs(metaData);
         ResultSet rs = null;
@@ -313,8 +309,6 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
         String cat = schema.orElse("%");
         Map<String, Object> tableDefinition = new HashMap<>();
 
@@ -354,8 +348,6 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
         int maxRowsValue = max_rows.orElse(100);
 
         try (Connection conn = getConnection(user, password, url)) {
@@ -364,14 +356,13 @@ public class MCPServer {
             ResultSet rs = stmt.executeQuery(query);
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
-            
-            List<String> jsonlRows = new ArrayList<>();
             int rowCount = 0;
             int max_long_data = MAX_LONG_DATA.orElse(100);
             
+            List<Map<String, String>> data = new ArrayList<>();
             while (rs.next() && rowCount < maxRowsValue) {
-                Map<String, Object> row = new HashMap<>();
-                
+                Map<String, String> row = new HashMap<>();
+
                 for (int i = 1; i <= columnCount; i++) {
                     String columnName = metaData.getColumnName(i);
                     Object value = rs.getObject(i);
@@ -386,11 +377,10 @@ public class MCPServer {
                         row.put(columnName, null);
                     }
                 }
-                
-                jsonlRows.add(mapper.writeValueAsString(row));
+                data.add(row);
                 rowCount++;
             }
-            return String.join("\n", jsonlRows);
+            return mapper.writeValueAsString(data);
         } catch (Exception e) {
             throw new ToolCallException("Failed to execute_query: " + e.getMessage(), e);
         }
@@ -405,8 +395,6 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
         int maxRowsValue = max_rows.orElse(100);
 
         try (Connection conn = getConnection(user, password, url)) {
@@ -463,21 +451,18 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
         try (Connection conn = getConnection(user, password, url)) {
             Statement stmt = conn.createStatement();
             
             ResultSet rs = stmt.executeQuery(query);
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
-            
-            List<String> jsonlRows = new ArrayList<>();
             int max_long_data = MAX_LONG_DATA.orElse(100);
             
+            List<Map<String, String>> data = new ArrayList<>();
             while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                
+                Map<String, String> row = new HashMap<>();
+
                 for (int i = 1; i <= columnCount; i++) {
                     String columnName = metaData.getColumnName(i);
                     Object value = rs.getObject(i);
@@ -492,10 +477,9 @@ public class MCPServer {
                         row.put(columnName, null);
                     }
                 }
-                
-                jsonlRows.add(mapper.writeValueAsString(row));
+                data.add(row);
             }
-            return String.join("\n", jsonlRows);
+            return mapper.writeValueAsString(data);
         } catch (Exception e) {
             throw new ToolCallException("Failed to query_database: " + e.getMessage(), e);
         }
@@ -511,7 +495,6 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
         int maxRowsValue = max_rows.orElse(20);
         int timeoutValue = timeout.orElse(300000);
 
@@ -540,8 +523,6 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
         String _api_key = api_key.orElse( API_KEY.orElse("sk-xxx"));
 
         try (Connection conn = getConnection(user, password, url)) {
@@ -568,8 +549,6 @@ public class MCPServer {
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
         String _api_key = api_key.orElse( API_KEY.orElse("sk-xxx"));
 
         try (Connection conn = getConnection(user, password, url)) {
@@ -588,26 +567,65 @@ public class MCPServer {
     }
 
 
+    String _query_database(McpLog log,
+    	String query, String graph,
+    	String user, String password, String url) 
+    {
+        try (Connection conn = getConnection(user, password, url)) {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            if (graph != null && !graph.isEmpty()) {
+                stmt.setString(1, graph);
+            }
+            ResultSet rs = stmt.executeQuery();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            int max_long_data = MAX_LONG_DATA.orElse(100);
+
+            List<Map<String, String>> data = new ArrayList<>();
+            while (rs.next()) {
+                Map<String, String> row = new HashMap<>();
+                
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnName = metaData.getColumnName(i);
+                    Object value = rs.getObject(i);
+                    
+                    if (value != null) {
+                        String stringValue = value.toString();
+                        if (stringValue.length() > max_long_data) {
+                            stringValue = stringValue.substring(0, max_long_data);
+                        }
+                        row.put(columnName, stringValue);
+                    } else {
+                        row.put(columnName, null);
+                    }
+                }
+                data.add(row);
+            }
+            return mapper.writeValueAsString(data);
+        } catch (Exception e) {
+            throw new ToolCallException("Failed to query_database: " + e.getMessage(), e);
+        }
+    }
+
     @Tool(description="This query retrieves all entity types in the RDF graph, along with their labels and comments if available. "
                 +"It filters out blank nodes and ensures that only IRI types are returned. "
                 +"The LIMIT clause is set to 100 to restrict the number of entity types returned. ")
-    String jdbc_sparql_get_entity_types(McpLog log,
+    String jdbc_sparql_list_entity_types(McpLog log,
+    	@ToolArg(description = "Graph", required = false) String graph,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
-
-        String query = """
+        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String query = String.format("""
     SELECT DISTINCT * FROM (
       SPARQL 
       PREFIX owl: <http://www.w3.org/2002/07/owl#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
       SELECT ?o 
-      WHERE {
-        GRAPH ?g {
+      WHERE { 
+        %s {
             ?s a ?o .
             
             OPTIONAL {
@@ -624,24 +642,22 @@ public class MCPServer {
         }
       }
       LIMIT 100
-    ) AS x 
-    """;
-        return jdbc_query_database(log, query, user, password, url);
+    ) AS x """, graphClause);
+        return _query_database(log, query, graph, user, password, url);
     }
 
 
     @Tool(description="This query retrieves all entity types in the RDF graph, along with their labels and comments if available. "
                 +"It filters out blank nodes and ensures that only IRI types are returned. "
                 +"The LIMIT clause is set to 100 to restrict the number of entity types returned.")
-    String jdbc_sparql_get_entity_types_detailed(McpLog log,
+    String jdbc_sparql_list_entity_types_detailed(McpLog log,
+    	@ToolArg(description = "Graph", required = false) String graph,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
-
-        String query = """
+        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String query = String.format("""
     SELECT * FROM (
         SPARQL
         PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -650,7 +666,7 @@ public class MCPServer {
 
         SELECT ?o, (SAMPLE(?label) AS ?label), (SAMPLE(?comment) AS ?comment)
         WHERE {
-            GRAPH ?g {
+            %s {
                 ?s a ?o .
                 OPTIONAL {?o rdfs:label ?label . FILTER (LANG(?label) = "en" || LANG(?label) = "")}
                 OPTIONAL {?o rdfs:comment ?comment . FILTER (LANG(?comment) = "en" || LANG(?comment) = "")}
@@ -660,24 +676,22 @@ public class MCPServer {
         GROUP BY ?o
         ORDER BY ?o
         LIMIT 20
-    ) AS results 
-    """;
-        return jdbc_query_database(log, query, user, password, url);
+    ) AS results """, graphClause);
+        return _query_database(log, query, graph, user, password, url);
     }
 
 
     @Tool(description="This query retrieves samples of entities for each type in the RDF graph, along with their labels and counts. "
                 +"It groups by entity type and orders the results by sample count in descending order. "
                 +"Note: The LIMIT clause is set to 20 to restrict the number of entity types returned.")
-    String jdbc_sparql_get_entity_types_samples(McpLog log,
+    String jdbc_sparql_list_entity_types_samples(McpLog log,
+    	@ToolArg(description = "Graph", required = false) String graph,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
-
-        String query = """
+        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String query = String.format("""
     SELECT * FROM (
         SPARQL
         PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -685,7 +699,7 @@ public class MCPServer {
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
         SELECT (SAMPLE(?s) AS ?sample), ?slabel, (COUNT(*) AS ?sampleCount), (?o AS ?entityType), ?olabel
         WHERE {
-            GRAPH ?g {
+            %s {
                 ?s a ?o .
                 OPTIONAL {?s rdfs:label ?slabel . FILTER (LANG(?slabel) = \"en\" || LANG(?slabel) = \"\")}
                 FILTER (isIRI(?s) && !isBlank(?s))
@@ -696,22 +710,20 @@ public class MCPServer {
         GROUP BY ?slabel ?o ?olabel
         ORDER BY DESC(?sampleCount) ?o ?slabel ?olabel
         LIMIT 20
-    ) AS results
-    """;
-        return jdbc_query_database(log, query, user, password, url);
+    ) AS results """, graphClause);
+        return _query_database(log, query, graph, user, password, url);
     }
 
 
     @Tool(description="This query retrieves all ontologies in the RDF graph, along with their labels and comments if available.")
-    String jdbc_sparql_get_ontologies(McpLog log,
+    String jdbc_sparql_list_ontologies(McpLog log,
+    	@ToolArg(description = "Graph", required = false) String graph,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        //log.debug("Listing tables");
-        //log.error("Listing tables");
-
-        String query = """
+        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String query = String.format("""
     SELECT * FROM (
         SPARQL 
         PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -719,7 +731,7 @@ public class MCPServer {
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         SELECT ?s, ?label, ?comment 
         WHERE {
-            GRAPH ?g {
+            %s {
                 ?s a owl:Ontology .
             
                 OPTIONAL {
@@ -732,27 +744,13 @@ public class MCPServer {
                     FILTER (LANG(?comment) = "en" || LANG(?comment) = "")
                 }
             
-                FILTER (isIRI(?o) && !isBlank(?o))
+                FILTER (isIRI(?s) && !isBlank(?s))
             }
         }
         LIMIT 100
     ) AS x
-    """;
-        return jdbc_query_database(log, query, user, password, url);
+    """, graphClause);
+        return _query_database(log, query, graph, user, password, url);
     }
-
-
-/**
-    @Prompt(description = "Visualize ER diagram")
-    PromptMessage er_diagram() {
-        return PromptMessage.withUserRole(new TextContent(
-                """
-                        The assistants goal is to use the MCP server to create a visual ER diagram of the database.
-                        """));
-    }
-
-**/
-
-
 
 }
