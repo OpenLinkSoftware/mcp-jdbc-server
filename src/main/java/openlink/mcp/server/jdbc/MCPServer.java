@@ -611,12 +611,12 @@ public class MCPServer {
                 +"It filters out blank nodes and ensures that only IRI types are returned. "
                 +"The LIMIT clause is set to 100 to restrict the number of entity types returned. ")
     String jdbc_sparql_list_entity_types(McpLog log,
-    	@ToolArg(description = "Graph", required = false) String graph,
+    	@ToolArg(description = "Graph IRI", required = false) String graph_iri,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String graphClause = (graph_iri != null && !graph_iri.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
         String query = String.format("""
     SELECT DISTINCT * FROM (
       SPARQL 
@@ -643,7 +643,7 @@ public class MCPServer {
       }
       LIMIT 100
     ) AS x """, graphClause);
-        return _query_database(log, query, graph, user, password, url);
+        return _query_database(log, query, graph_iri, user, password, url);
     }
 
 
@@ -651,12 +651,12 @@ public class MCPServer {
                 +"It filters out blank nodes and ensures that only IRI types are returned. "
                 +"The LIMIT clause is set to 100 to restrict the number of entity types returned.")
     String jdbc_sparql_list_entity_types_detailed(McpLog log,
-    	@ToolArg(description = "Graph", required = false) String graph,
+    	@ToolArg(description = "Graph IRI", required = false) String graph_iri,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String graphClause = (graph_iri != null && !graph_iri.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
         String query = String.format("""
     SELECT * FROM (
         SPARQL
@@ -677,7 +677,7 @@ public class MCPServer {
         ORDER BY ?o
         LIMIT 20
     ) AS results """, graphClause);
-        return _query_database(log, query, graph, user, password, url);
+        return _query_database(log, query, graph_iri, user, password, url);
     }
 
 
@@ -685,12 +685,12 @@ public class MCPServer {
                 +"It groups by entity type and orders the results by sample count in descending order. "
                 +"Note: The LIMIT clause is set to 20 to restrict the number of entity types returned.")
     String jdbc_sparql_list_entity_types_samples(McpLog log,
-    	@ToolArg(description = "Graph", required = false) String graph,
+    	@ToolArg(description = "Graph IRI", required = false) String graph_iri,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String graphClause = (graph_iri != null && !graph_iri.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
         String query = String.format("""
     SELECT * FROM (
         SPARQL
@@ -711,18 +711,18 @@ public class MCPServer {
         ORDER BY DESC(?sampleCount) ?o ?slabel ?olabel
         LIMIT 20
     ) AS results """, graphClause);
-        return _query_database(log, query, graph, user, password, url);
+        return _query_database(log, query, graph_iri, user, password, url);
     }
 
 
     @Tool(description="This query retrieves all ontologies in the RDF graph, along with their labels and comments if available.")
     String jdbc_sparql_list_ontologies(McpLog log,
-    	@ToolArg(description = "Graph", required = false) String graph,
+    	@ToolArg(description = "Graph IRI", required = false) String graph_iri,
     	@ToolArg(description = "Username", required = false) String user,
     	@ToolArg(description = "Password", required = false) String password,
     	@ToolArg(description = "JDBC URL", required = false) String url) 
     {
-        String graphClause = (graph != null && !graph.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
+        String graphClause = (graph_iri != null && !graph_iri.isEmpty()) ? " GRAPH `iri(??)` " : " GRAPH ?g ";
         String query = String.format("""
     SELECT * FROM (
         SPARQL 
@@ -750,7 +750,7 @@ public class MCPServer {
         LIMIT 100
     ) AS x
     """, graphClause);
-        return _query_database(log, query, graph, user, password, url);
+        return _query_database(log, query, graph_iri, user, password, url);
     }
 
 }
