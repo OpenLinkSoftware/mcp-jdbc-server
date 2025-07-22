@@ -1,7 +1,8 @@
 ---
-# Java based Model Context Procotol (MCP) Server for JDBC
+# OpenLink MCP Server for JDBC
 
-A lightweight MCP (Model Context Protocol) server for JDBC built with **Quakrus** . This server is compatible with Virtuoso DBMS and other DBMS backends that have JDBC drivers.
+A lightweight Java-based MCP (Model Context Protocol) server for JDBC built with **Quakrus**. 
+This server is compatible with Virtuoso DBMS and any other DBMS backend that has a JDBC driver.
 
 ![mcp-client-and-servers|648x499](https://www.openlinksw.com/data/gifs/mcp-client-and-servers-opal-tools-with-jdbc.gif)
 
@@ -46,12 +47,15 @@ jdbc.user=dba
 jdbc.password=dba
 jdbc.api_key=xxx
 ```
+
 ---
 
 ## Configuration
 
-For **Claude Desktop** users:
+For **Claude Desktop** users using Virtuoso and its JDBC driver:
+
 Add the following to `claude_desktop_config.json`:
+
 ```json
 {
   "mcpServers": {
@@ -69,8 +73,10 @@ Add the following to `claude_desktop_config.json`:
 }
 ```
 
-For **Claude Desktop** users using other JDBC Drivers or a combination of drivers:
-Add the following to `claude_desktop_config.json`:
+For **Claude Desktop** users using another JDBC driver or a combination of drivers:
+
+Add the following, edited to suit your local environment, to `claude_desktop_config.json`:
+
 ```json
     "jdbc": {
       "command": "java",
@@ -86,6 +92,7 @@ Add the following to `claude_desktop_config.json`:
       }
     }
 ```
+
 ---
 
 ## Use
