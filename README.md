@@ -1,6 +1,7 @@
 ---
 # OpenLink MCP Server for JDBC
 
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/OpenLinkSoftware/mcp-jdbc-server)](https://archestra.ai/mcp-catalog/openlinksoftware__mcp-jdbc-server)
 A lightweight Java-based MCP (Model Context Protocol) server for JDBC built with **Quakrus**. 
 This server is compatible with Virtuoso DBMS and any other DBMS backend that has a JDBC driver.
 
