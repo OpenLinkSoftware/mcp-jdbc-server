@@ -24,6 +24,10 @@ This server is compatible with Virtuoso DBMS and any other DBMS backend that has
 
 ---
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/openlink-mcp-server-jdbc).
+
 ## Prerequisites
 
 MCP server requires Java 21 or above.
